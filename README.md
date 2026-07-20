@@ -1,0 +1,2 @@
+# intelixa
+Inventory Management system
