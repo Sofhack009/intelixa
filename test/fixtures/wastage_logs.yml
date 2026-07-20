@@ -1,0 +1,15 @@
+# Read about fixtures at https://api.rubyonrails.org/classes/ActiveRecord/FixtureSet.html
+
+one:
+  item: one
+  quantity_wasted: 1
+  reason_code: MyString
+  estimated_cost: 9.99
+  logged_at: 2026-07-20 16:55:21
+
+two:
+  item: two
+  quantity_wasted: 1
+  reason_code: MyString
+  estimated_cost: 9.99
+  logged_at: 2026-07-20 16:55:21

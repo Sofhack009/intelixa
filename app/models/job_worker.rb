@@ -1,0 +1,2 @@
+class JobWorker < ApplicationRecord
+end

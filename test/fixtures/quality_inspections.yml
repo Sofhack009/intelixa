@@ -1,0 +1,21 @@
+# Read about fixtures at https://api.rubyonrails.org/classes/ActiveRecord/FixtureSet.html
+
+one:
+  source: one
+  source_type: Source
+  item: one
+  quantity_inspected: 1
+  quantity_approved: 1
+  quantity_rejected: 1
+  inspected_by: 1
+  status: MyString
+
+two:
+  source: two
+  source_type: Source
+  item: two
+  quantity_inspected: 1
+  quantity_approved: 1
+  quantity_rejected: 1
+  inspected_by: 1
+  status: MyString

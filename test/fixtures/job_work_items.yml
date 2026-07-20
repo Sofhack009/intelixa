@@ -1,0 +1,15 @@
+# Read about fixtures at https://api.rubyonrails.org/classes/ActiveRecord/FixtureSet.html
+
+one:
+  job_work_challan: one
+  item: one
+  quantity_issued: 1
+  quantity_received: 1
+  quantity_scrapped: 1
+
+two:
+  job_work_challan: two
+  item: two
+  quantity_issued: 1
+  quantity_received: 1
+  quantity_scrapped: 1
