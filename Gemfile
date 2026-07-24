@@ -65,4 +65,4 @@ group :test do
 end
 
 gem "devise", "~> 5.0"
-gem "motor-admin", "~> 0.5.0"
+gem "motor-admin"

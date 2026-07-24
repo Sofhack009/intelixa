@@ -1,0 +1,61 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <title><%= content_for(:title) || "Sign In" %> · Intelixa</title>
+    <meta name="viewport" content="width=device-width,initial-scale=1">
+    <%= csrf_meta_tags %>
+    <%= csp_meta_tag %>
+
+    <link rel="icon" href="/icon.png" type="image/png">
+    <link rel="icon" href="/icon.svg" type="image/svg+xml">
+    <link rel="apple-touch-icon" href="/icon.png">
+
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Fraunces:opsz,wght@9..144,400;9..144,500;9..144,600;9..144,700&family=Inter:wght@400;500;600;700;800&family=IBM+Plex+Mono:wght@400;500;600&display=swap" rel="stylesheet">
+
+    <%= stylesheet_link_tag :app, "data-turbo-track": "reload" %>
+  </head>
+
+  <body>
+    <div class="auth-shell">
+      <!-- Brand panel (hidden on mobile — see .auth-card-brand instead) -->
+      <aside class="auth-aside">
+        <div class="auth-aside-top">
+          <div class="brand-icon"></div>
+          <div class="wordmark">INTELIXA<small>ENTERPRISE PLATFORM</small></div>
+        </div>
+
+        <div class="auth-aside-body">
+          <h1>Run the floor from one screen.</h1>
+          <p>Track yarn-to-garment inventory, job work, and quality inspections across every warehouse — in real time.</p>
+        </div>
+
+        <div class="auth-stats">
+          <div><strong>5</strong><span>Warehouses</span></div>
+          <div><strong>17+</strong><span>SKUs Tracked</span></div>
+          <div><strong>24/7</strong><span>Stock Visibility</span></div>
+        </div>
+      </aside>
+
+      <!-- Form column -->
+      <main class="auth-main">
+        <div class="auth-card">
+          <div class="auth-card-brand">
+            <div class="brand-icon"></div>
+            <div class="wordmark">INTELIXA<small>ENTERPRISE PLATFORM</small></div>
+          </div>
+
+          <% if notice %>
+            <div class="flash flash-notice"><%= notice %></div>
+          <% end %>
+          <% if alert %>
+            <div class="flash flash-alert"><%= alert %></div>
+          <% end %>
+
+          <%= yield %>
+        </div>
+      </main>
+    </div>
+  </body>
+</html>

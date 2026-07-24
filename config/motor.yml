@@ -1,0 +1,114 @@
+---
+engine_version: 0.5.0
+file_version: 2026-07-20 13:43:48.370993000 Z
+resources:
+- name: inventory_batch
+  preferences:
+    display_column: id
+  updated_at: 2026-07-20 13:43:48.370993000 +00:00
+configs:
+- key: header.links
+  value:
+  - name: Reports
+    link_type: reports
+  - name: Forms
+    link_type: forms
+  updated_at: 2026-07-20 12:31:07.732188000 +00:00
+queries:
+- id: 1
+  name: Low Stock Alerts
+  sql_body: |-
+    SELECT i.sku_code, i.name, i.min_stock_level, COALESCE(SUM(b.quantity), 0) as current_stock
+    FROM items i
+    LEFT JOIN inventory_batches b ON b.item_id = i.id
+    GROUP BY i.id
+    HAVING COALESCE(SUM(b.quantity), 0) < i.min_stock_level
+    ORDER BY current_stock ASC
+  description:
+  preferences:
+    query_type: sql
+    database: primary
+    visualization: table
+    visualization_options: {}
+    variables: []
+  tags:
+  - lowstock
+  updated_at: 2026-07-20 12:48:54.521069000 +00:00
+- id: 2
+  name: Overdue Job Work
+  sql_body: "SELECT c.id as challan_id, jw.name as job_worker, c.expected_return_date,
+    \n       DATE_PART('day', CURRENT_TIMESTAMP - c.expected_return_date) as days_overdue\nFROM
+    job_work_challans c\nJOIN job_workers jw ON c.job_worker_id = jw.id\nWHERE c.status
+    = 'Pending' AND c.expected_return_date < CURRENT_TIMESTAMP\nORDER BY days_overdue
+    DESC"
+  description:
+  preferences:
+    query_type: sql
+    database: primary
+    visualization: table
+    visualization_options: {}
+    variables: []
+  tags: []
+  updated_at: 2026-07-20 12:49:35.307204000 +00:00
+- id: 3
+  name: Trading Inventory Value
+  sql_body: |-
+    SELECT i.name, SUM(b.quantity * b.unit_cost) as total_capital_locked
+    FROM items i
+    JOIN inventory_batches b ON b.item_id = i.id
+    WHERE i.item_type = 'trading_product'
+    GROUP BY i.name
+  description:
+  preferences:
+    query_type: sql
+    database: primary
+    visualization: table
+    visualization_options: {}
+    variables: []
+  tags: []
+  updated_at: 2026-07-20 12:50:12.976513000 +00:00
+dashboards:
+- id: 1
+  title: Low Stock View point
+  description:
+  preferences:
+    layout:
+    - title: Low Stock Alerts
+      query_id: 1
+      size: 3x2
+    variables: []
+  tags: []
+  updated_at: 2026-07-20 12:51:53.064335000 +00:00
+- id: 2
+  title: Trading
+  description: 'Trading inventory stock in warehosuse
+
+    '
+  preferences:
+    layout:
+    - title: Trading Inventory Value
+      query_id: 3
+      size: 3x2
+    variables: []
+  tags: []
+  updated_at: 2026-07-20 12:53:02.367054000 +00:00
+- id: 3
+  title: Overdue worker
+  description:
+  preferences:
+    layout:
+    - title: Overdue Job Work
+      query_id: 2
+      size: 3x2
+    variables: []
+  tags: []
+  updated_at: 2026-07-20 12:53:31.314102000 +00:00
+forms: []
+alerts: []
+api_configs:
+- id: 1
+  name: origin
+  url: "/"
+  preferences: {}
+  description:
+  updated_at: 2026-07-20 12:04:51.906780000 +00:00

@@ -1,0 +1,104 @@
+<%# app/views/pages/intelixa.html.erb - INTELIXA demo page %>
+<% content_for :head do %>
+  <!-- INTELIXA fonts & favicon -->
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Fraunces:opsz,wght@9..144,400;9..144,500;9..144,600;9..144,700&family=Inter:wght@400;500;600;700;800&family=IBM+Plex+Mono:wght@400;500;600&display=swap" rel="stylesheet">
+  <link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'%3E%3Crect width='100' height='100' rx='22' fill='%2316244F'/%3E%3Cpath d='M50 18 L78 34 V66 L50 82 L22 66 V34 Z' fill='none' stroke='%233D68E0' stroke-width='4'/%3E%3Ccircle cx='50' cy='50' r='9' fill='%233D68E0'/%3E%3C/svg%3E">
+  <%= stylesheet_link_tag 'intelixa', media: 'all' %>
+<% end %>
+
+<!-- Page content copied from onew.html body -->
+<div class="app-shell">
+  <!-- Sidebar -->
+  <aside class="sidebar">
+    <div class="sidebar-brand">
+      <div class="brand-icon"></div>
+      <div class="wordmark">INTELIXA<small>ENTERPRISE PLATFORM</small></div>
+    </div>
+    <div class="nav-scroll">
+      <div class="nav-group-label">Overview</div>
+      <div class="nav-item active"><div class="nav-icon"></div>Dashboard</div>
+      <div class="nav-group-label">Modules</div>
+      <div class="nav-item"><div class="nav-icon"></div>Inventory</div>
+      <div class="nav-item"><div class="nav-icon"></div>Job Work</div>
+      <div class="nav-item"><div class="nav-icon"></div>Quality</div>
+    </div>
+    <div class="sidebar-foot">
+      <div class="user-chip">
+        <div class="avatar">US</div>
+        <div class="who"><div class="name">User Name</div><div class="role">Administrator</div></div>
+      </div>
+    </div>
+  </aside>
+
+  <!-- Main Content -->
+  <div class="main-col">
+    <header class="topbar">
+      <div>
+        <h2>Dashboard</h2>
+        <div class="crumb">System Overview</div>
+      </div>
+      <div class="spacer"></div>
+    </header>
+
+    <div class="view-wrap">
+      <div class="view-head">
+        <h1>Welcome Back</h1>
+        <p>Here is the current status of your operations.</p>
+      </div>
+
+      <!-- KPI Grid -->
+      <div class="kpi-grid">
+        <div class="kpi-card">
+          <div class="kpi-label">Total Value</div>
+          <div class="kpi-value">₹1,250,000</div>
+        </div>
+        <div class="kpi-card">
+          <div class="kpi-label">Active Items</div>
+          <div class="kpi-value">142</div>
+        </div>
+        <div class="kpi-card">
+          <div class="kpi-label">Alerts</div>
+          <div class="kpi-value">3</div>
+        </div>
+      </div>
+
+      <!-- Data Table Card -->
+      <div class="card">
+        <div class="card-head">
+          <h3>Recent Activity</h3>
+        </div>
+        <div class="table-wrap">
+          <table class="data-table">
+            <thead>
+              <tr>
+                <th>Reference</th>
+                <th>Status</th>
+                <th>Date</th>
+              </tr>
+            </thead>
+            <tbody>
+              <tr>
+                <td class="strong">INV-1024</td>
+                <td><span class="pill">Completed</span></td>
+                <td class="mono">2026-07-20</td>
+              </tr>
+              <tr>
+                <td class="strong">JW-501</td>
+                <td><span class="pill">Pending</span></td>
+                <td class="mono">2026-07-19</td>
+              </tr>
+              <tr>
+                <td class="strong">QC-908</td>
+                <td><span class="pill">Review</span></td>
+                <td class="mono">2026-07-18</td>
+              </tr>
+            </tbody>
+          </table>
+        </div>
+      </div>
+
+    </div>
+  </div>
+</div>

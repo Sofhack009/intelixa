@@ -1,0 +1,337 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Responsive Dashboard Layout</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Fraunces:opsz,wght@9..144,400;9..144,500;9..144,600;9..144,700&family=Inter:wght@400;500;600;700;800&family=IBM+Plex+Mono:wght@400;500;600&display=swap" rel="stylesheet">
+<style>
+/* Design Tokens based on the provided source */
+:root {
+  --ink-950: #F3F6FC;
+  --ink-900: #FFFFFF;
+  --ink-850: #FFFFFF;
+  --ink-800: #F0F4FB;
+  --ink-750: #E3E9F5;
+  --ink-700: #C9D4E8;
+  --line-soft: rgba(20,38,90,0.09);
+  --line-mid: rgba(20,38,90,0.16);
+  --platinum: #131B2E;
+  --platinum-dim: #48536B;
+  --muted: #727F98;
+  --gold: #2F5FDB;
+  --gold-bright: #3D68E0;
+  --gold-dim: rgba(47,95,219,0.10);
+  --emerald: #1F9D63;
+  --amber: #B87A0B;
+  --rose: #D0343F;
+  --radius-s: 6px;
+  --radius-m: 10px;
+  --radius-l: 16px;
+  --shadow-card: 0 1px 2px rgba(16,24,55,0.05), 0 8px 24px -12px rgba(16,24,55,0.12);
+  --surface-translucent: rgba(255,255,255,0.86);
+  --font-display: 'Fraunces', serif;
+  --font-body: 'Inter', -apple-system, BlinkMacSystemFont, sans-serif;
+  --font-mono: 'IBM Plex Mono', monospace;
+}
+
+/* Base Styles */
+* { box-sizing: border-box; margin: 0; padding: 0; }
+body {
+  font-family: var(--font-body);
+  background: var(--ink-950);
+  color: var(--platinum);
+  -webkit-font-smoothing: antialiased;
+  font-size: 14px;
+  line-height: 1.5;
+}
+.mono { font-family: var(--font-mono); }
+
+/* Layout Structure */
+.app-shell {
+  display: grid;
+  grid-template-columns: 250px 1fr;
+  min-height: 100vh;
+}
+
+/* Sidebar */
+.sidebar {
+  background: var(--ink-900);
+  border-right: 1px solid var(--line-soft);
+  display: flex;
+  flex-direction: column;
+  position: sticky;
+  top: 0;
+  height: 100vh;
+}
+.sidebar-brand {
+  padding: 22px 20px 18px;
+  display: flex;
+  align-items: center;
+  gap: 11px;
+  border-bottom: 1px solid var(--line-soft);
+}
+.brand-icon {
+  width: 30px; height: 30px; background: var(--ink-850); border-radius: 8px; border: 1px solid var(--gold);
+}
+.wordmark {
+  font-family: var(--font-display);
+  font-weight: 600;
+  font-size: 17px;
+}
+.wordmark small {
+  display: block;
+  font-family: var(--font-mono);
+  font-size: 8px;
+  color: var(--muted);
+  letter-spacing: 0.14em;
+  margin-top: 1px;
+}
+.nav-scroll {
+  flex: 1;
+  overflow-y: auto;
+  padding: 14px 12px;
+}
+.nav-group-label {
+  font-size: 9.5px;
+  letter-spacing: 0.14em;
+  text-transform: uppercase;
+  color: #565c6b;
+  font-family: var(--font-mono);
+  padding: 14px 10px 6px;
+}
+.nav-item {
+  display: flex;
+  align-items: center;
+  gap: 11px;
+  padding: 10px 11px;
+  border-radius: var(--radius-s);
+  color: var(--platinum-dim);
+  font-size: 13px;
+  font-weight: 500;
+  margin-bottom: 4px;
+}
+.nav-item.active {
+  background: var(--gold-dim);
+  color: var(--gold-bright);
+  position: relative;
+}
+.nav-item.active::before {
+  content: '';
+  position: absolute; left: -12px; top: 8px; bottom: 8px; width: 3px;
+  background: var(--gold); border-radius: 2px;
+}
+.nav-icon { width: 16px; height: 16px; background: currentColor; opacity: 0.5; border-radius: 3px; }
+.nav-item.active .nav-icon { opacity: 1; }
+
+.sidebar-foot {
+  padding: 14px 16px 18px;
+  border-top: 1px solid var(--line-soft);
+}
+.user-chip {
+  display: flex; align-items: center; gap: 10px; padding: 8px;
+}
+.avatar {
+  width: 32px; height: 32px; border-radius: 50%; background: var(--gold-dim);
+  color: var(--gold-bright); display: flex; align-items: center; justify-content: center;
+  font-family: var(--font-display); font-weight: 600; font-size: 13px;
+}
+.who .name { font-size: 12.5px; font-weight: 600; color: var(--platinum); }
+.who .role { font-size: 10.5px; color: var(--muted); font-family: var(--font-mono); }
+
+/* Main Content Area */
+.main-col {
+  display: flex;
+  flex-direction: column;
+  min-width: 0;
+}
+.topbar {
+  height: 62px;
+  border-bottom: 1px solid var(--line-soft);
+  display: flex;
+  align-items: center;
+  padding: 0 26px;
+  position: sticky;
+  top: 0;
+  background: var(--surface-translucent);
+  backdrop-filter: blur(10px);
+  z-index: 20;
+}
+.topbar h2 { font-family: var(--font-display); font-size: 19px; font-weight: 600; }
+.topbar .crumb { font-size: 11.5px; color: var(--muted); font-family: var(--font-mono); margin-top: 1px; }
+.spacer { flex: 1; }
+
+.view-wrap {
+  flex: 1;
+  padding: 26px 30px 60px;
+  max-width: 1500px;
+  width: 100%;
+  margin: 0 auto;
+}
+.view-head {
+  margin-bottom: 22px;
+}
+.view-head h1 { font-family: var(--font-display); font-size: 25px; font-weight: 600; margin-bottom: 4px; }
+.view-head p { color: var(--muted); font-size: 13px; }
+
+/* Grid and Cards */
+.kpi-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(210px, 1fr));
+  gap: 14px;
+  margin-bottom: 22px;
+}
+.kpi-card {
+  background: var(--ink-850);
+  border: 1px solid var(--line-soft);
+  border-radius: var(--radius-m);
+  padding: 16px 18px;
+}
+.kpi-label {
+  font-size: 10.5px; text-transform: uppercase; letter-spacing: 0.08em;
+  color: var(--muted); font-family: var(--font-mono); margin-bottom: 10px;
+}
+.kpi-value { font-family: var(--font-display); font-size: 26px; font-weight: 600; color: var(--platinum); }
+
+.card {
+  background: var(--ink-850);
+  border: 1px solid var(--line-soft);
+  border-radius: var(--radius-l);
+  box-shadow: var(--shadow-card);
+  margin-bottom: 16px;
+}
+.card-head {
+  padding: 16px 20px;
+  border-bottom: 1px solid var(--line-soft);
+}
+.card-head h3 { font-size: 14px; font-weight: 600; font-family: var(--font-display); }
+
+/* Tables */
+.table-wrap { overflow-x: auto; }
+.data-table { width: 100%; border-collapse: collapse; font-size: 12.8px; }
+.data-table th {
+  text-align: left; padding: 11px 14px; font-size: 10.5px; text-transform: uppercase;
+  letter-spacing: 0.06em; color: var(--muted); font-weight: 600;
+  border-bottom: 1px solid var(--line-mid); font-family: var(--font-mono);
+}
+.data-table td { padding: 11px 14px; border-bottom: 1px solid var(--line-soft); color: var(--platinum-dim); }
+.data-table td.strong { color: var(--platinum); font-weight: 600; }
+
+.pill {
+  display: inline-flex; align-items: center; gap: 5px; padding: 3px 9px;
+  border-radius: 20px; font-size: 10.5px; font-weight: 600;
+  font-family: var(--font-mono); background: var(--ink-800);
+}
+
+/* Responsive adjustments */
+@media (max-width: 1080px) {
+  .app-shell { grid-template-columns: 0 1fr; }
+  .sidebar { display: none; /* In a real app, this would slide out */ }
+  .view-wrap { padding: 22px 20px 50px; }
+}
+@media (max-width: 640px) {
+  .view-wrap { padding: 18px 14px 50px; }
+  .kpi-grid { grid-template-columns: repeat(auto-fill, minmax(140px, 1fr)); }
+}
+</style>
+</head>
+<body>
+
+<div class="app-shell">
+  <!-- Sidebar -->
+  <aside class="sidebar">
+    <div class="sidebar-brand">
+      <div class="brand-icon"></div>
+      <div class="wordmark">INTELIXA<small>ENTERPRISE PLATFORM</small></div>
+    </div>
+    <div class="nav-scroll">
+      <div class="nav-group-label">Overview</div>
+      <div class="nav-item active"><div class="nav-icon"></div>Dashboard</div>
+      <div class="nav-group-label">Modules</div>
+      <div class="nav-item"><div class="nav-icon"></div>Inventory</div>
+      <div class="nav-item"><div class="nav-icon"></div>Job Work</div>
+      <div class="nav-item"><div class="nav-icon"></div>Quality</div>
+    </div>
+    <div class="sidebar-foot">
+      <div class="user-chip">
+        <div class="avatar">US</div>
+        <div class="who"><div class="name">User Name</div><div class="role">Administrator</div></div>
+      </div>
+    </div>
+  </aside>
+
+  <!-- Main Content -->
+  <div class="main-col">
+    <header class="topbar">
+      <div>
+        <h2>Dashboard</h2>
+        <div class="crumb">System Overview</div>
+      </div>
+      <div class="spacer"></div>
+    </header>
+
+    <div class="view-wrap">
+      <div class="view-head">
+        <h1>Welcome Back</h1>
+        <p>Here is the current status of your operations.</p>
+      </div>
+
+      <!-- KPI Grid -->
+      <div class="kpi-grid">
+        <div class="kpi-card">
+          <div class="kpi-label">Total Value</div>
+          <div class="kpi-value">₹1,250,000</div>
+        </div>
+        <div class="kpi-card">
+          <div class="kpi-label">Active Items</div>
+          <div class="kpi-value">142</div>
+        </div>
+        <div class="kpi-card">
+          <div class="kpi-label">Alerts</div>
+          <div class="kpi-value">3</div>
+        </div>
+      </div>
+
+      <!-- Data Table Card -->
+      <div class="card">
+        <div class="card-head">
+          <h3>Recent Activity</h3>
+        </div>
+        <div class="table-wrap">
+          <table class="data-table">
+            <thead>
+              <tr>
+                <th>Reference</th>
+                <th>Status</th>
+                <th>Date</th>
+              </tr>
+            </thead>
+            <tbody>
+              <tr>
+                <td class="strong">INV-1024</td>
+                <td><span class="pill">Completed</span></td>
+                <td class="mono">2026-07-20</td>
+              </tr>
+              <tr>
+                <td class="strong">JW-501</td>
+                <td><span class="pill">Pending</span></td>
+                <td class="mono">2026-07-19</td>
+              </tr>
+              <tr>
+                <td class="strong">QC-908</td>
+                <td><span class="pill">Review</span></td>
+                <td class="mono">2026-07-18</td>
+              </tr>
+            </tbody>
+          </table>
+        </div>
+      </div>
+
+    </div>
+  </div>
+</div>
+
+</body>
+</html>

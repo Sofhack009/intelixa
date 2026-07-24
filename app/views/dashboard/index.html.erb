@@ -1,0 +1,65 @@
+<div class="view-wrap">
+  <div class="view-head">
+    <h1>Welcome Back, <%= current_user.try(:full_name).presence || current_user.email if current_user %></h1>
+    <p>Here is the real-time operational health of Parshavanath Exim.</p>
+  </div>
+
+  <!-- Live KPI Grid -->
+  <div class="kpi-grid">
+    <div class="kpi-card">
+      <div class="kpi-label">Total Inventory Value</div>
+      <div class="kpi-value"><%= number_to_currency(@inventory_value || 0, unit: "₹", precision: 0) %></div>
+    </div>
+    <div class="kpi-card">
+      <div class="kpi-label">Active Master Items</div>
+      <div class="kpi-value"><%= @active_items_count || 0 %></div>
+    </div>
+    <div class="kpi-card">
+      <div class="kpi-label">Low Stock Alerts</div>
+      <div class="kpi-value" style="color: var(--rose);"><%= @alerts_count || 0 %></div>
+    </div>
+  </div>
+
+  <!-- Recent Activity Table -->
+  <div class="card" style="margin-top: 20px;">
+    <div class="card-head">
+      <h3>Recent Inventory Activity</h3>
+      <div class="card-sub">Latest stock movements across all warehouses</div>
+    </div>
+    <div class="table-wrap">
+      <table class="data-table">
+        <thead>
+          <tr>
+            <th>Batch / Ref</th>
+            <th>Item</th>
+            <th>Warehouse</th>
+            <th class="num">Quantity</th>
+            <th>Date</th>
+          </tr>
+        </thead>
+        <tbody>
+          <% if @recent_movements.present? %>
+            <% @recent_movements.each do |movement| %>
+              <tr>
+                <td class="strong mono"><%= movement.batch_number %></td>
+                <td><%= movement.item.try(:name) || 'Unknown Item' %></td>
+                <td><%= movement.warehouse.try(:name) || 'Unknown Location' %></td>
+                <td class="num"><%= number_with_delimiter(movement.quantity) %></td>
+                <td class="mono"><%= movement.created_at.strftime("%d %b %Y") %></td>
+              </tr>
+            <% end %>
+          <% else %>
+            <tr>
+              <td colspan="5">
+                <div class="empty-state" style="padding: 30px; text-align: center; color: var(--muted);">
+                  <div class="es-title" style="font-weight: 600; color: var(--platinum-dim);">No recent movements found.</div>
+                  <div class="es-sub" style="font-size: 12px;">Seed the database to view live data.</div>
+                </div>
+              </td>
+            </tr>
+          <% end %>
+        </tbody>
+      </table>
+    </div>
+  </div>
+</div>

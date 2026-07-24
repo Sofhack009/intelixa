@@ -10,18 +10,116 @@
 
     <%= yield :head %>
 
-    <%# Enable PWA manifest for installable apps (make sure to enable in config/routes.rb too!) %>
-    <%#= tag.link rel: "manifest", href: pwa_manifest_path(format: :json) %>
-
     <link rel="icon" href="/icon.png" type="image/png">
     <link rel="icon" href="/icon.svg" type="image/svg+xml">
     <link rel="apple-touch-icon" href="/icon.png">
 
-    <%# Includes all stylesheet files in app/assets/stylesheets %>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Fraunces:opsz,wght@9..144,400;9..144,500;9..144,600;9..144,700&family=Inter:wght@400;500;600;700;800&family=IBM+Plex+Mono:wght@400;500;600&display=swap" rel="stylesheet">
+
     <%= stylesheet_link_tag :app, "data-turbo-track": "reload" %>
   </head>
 
-  <body>
-    <%= yield %>
+<body>
+    <div class="app-shell">
+      <div class="sidebar-backdrop" data-sidebar-backdrop></div>
+
+      <aside class="sidebar" id="app-sidebar">
+        <div class="sidebar-brand">
+          <div class="brand-icon"></div>
+          <div class="wordmark">INTELIXA<small>ENTERPRISE PLATFORM</small></div>
+        </div>
+        <div class="nav-scroll">
+          <div class="nav-group-label">Overview</div>
+          <a href="/" class="nav-item active">
+  <div class="nav-icon"></div>Dashboard
+</a>
+
+    <div class="nav-group-label">Modules</div>
+          <a href="/motor_admin/data/items" class="nav-item">
+            <div class="nav-icon"></div>Master Management
+          </a>
+          <a href="/motor_admin/data/inventory_batches" class="nav-item">
+            <div class="nav-icon"></div>Inventory
+          </a>
+          <a href="/motor_admin/data/job_work_challans" class="nav-item">
+            <div class="nav-icon"></div>Job Work
+          </a>
+          <a href="/motor_admin/data/quality_inspections" class="nav-item">
+            <div class="nav-icon"></div>Quality
+          </a>
+    </div>
+        <div class="sidebar-foot">
+          <% if current_user %>
+            <div class="user-chip">
+              <div class="avatar"><%= current_user.email[0..1].upcase %></div>
+              <div class="who">
+                <div class="name"><%= current_user.try(:full_name).presence || current_user.email %></div>
+                <div class="role"><%= current_user.try(:role)&.titleize || "Admin" %></div>
+              </div>
+            </div>
+            <%= button_to "Sign Out", destroy_user_session_path, method: :delete, class: "btn btn-ghost btn-sm", style: "width: 100%; margin-top: 10px;" %>
+          <% else %>
+            <div class="guest-chip">
+              <div class="avatar avatar-guest">?</div>
+              <div class="who">
+                <div class="name">Not signed in</div>
+                <div class="role">Guest</div>
+              </div>
+            </div>
+            <%= link_to "Sign In", new_user_session_path, class: "btn btn-primary btn-sm", style: "width: 100%; margin-top: 10px;" %>
+          <% end %>
+        </div>
+      </aside>
+
+      <div class="main-col">
+        <header class="topbar">
+          <button type="button" class="menu-btn" data-sidebar-toggle aria-label="Toggle navigation" aria-expanded="false" aria-controls="app-sidebar">
+            <span></span>
+          </button>
+          <div>
+            <h2><%= content_for(:page_title) || "Dashboard" %></h2>
+            <div class="crumb"><%= content_for(:page_crumb) || "System Overview" %></div>
+          </div>
+          <div class="spacer"></div>
+        </header>
+
+        <%= yield %>
+
+      </div>
+    </div>
+
+    <script>
+      (function () {
+        var body = document.body;
+        var toggle = document.querySelector('[data-sidebar-toggle]');
+        var backdrop = document.querySelector('[data-sidebar-backdrop]');
+
+        function closeSidebar() {
+          body.classList.remove('sidebar-open');
+          if (toggle) toggle.setAttribute('aria-expanded', 'false');
+        }
+        function openSidebar() {
+          body.classList.add('sidebar-open');
+          if (toggle) toggle.setAttribute('aria-expanded', 'true');
+        }
+
+        if (toggle) {
+          toggle.addEventListener('click', function () {
+            body.classList.contains('sidebar-open') ? closeSidebar() : openSidebar();
+          });
+        }
+        if (backdrop) backdrop.addEventListener('click', closeSidebar);
+
+        document.addEventListener('keydown', function (e) {
+          if (e.key === 'Escape') closeSidebar();
+        });
+        window.addEventListener('resize', function () {
+          if (window.innerWidth > 1080) closeSidebar();
+        });
+        document.addEventListener('turbo:load', closeSidebar);
+      })();
+    </script>
   </body>
 </html>
