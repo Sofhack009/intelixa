@@ -12,3 +12,4 @@
 @import "tailwindcss/components";
 @import "tailwindcss/utilities";
 @import "custom_theme.css"; /* Your custom INTELIXA design tokens */
+@import "intelixa.css"; /* Your custom INTELIXA design tokens */
