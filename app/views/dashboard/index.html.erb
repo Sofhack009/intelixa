@@ -1,65 +1,133 @@
-<div class="view-wrap">
-  <div class="view-head">
-    <h1>Welcome Back, <%= current_user.try(:full_name).presence || current_user.email if current_user %></h1>
-    <p>Here is the real-time operational health of Parshavanath Exim.</p>
-  </div>
+<% content_for :page_title, "Operations Dashboard" %>
+<% content_for :page_crumb, "Parshavanath Exim · #{Time.current.strftime('%d %b %Y')}" %>
 
-  <!-- Live KPI Grid -->
-  <div class="kpi-grid">
-    <div class="kpi-card">
+<div class="view-wrap dash">
+  <header class="dash-hero">
+    <div class="dash-hero-copy">
+      <h1>
+        Welcome back<% if current_user %>,
+          <%= current_user.try(:full_name).presence || current_user.email.split("@").first.titleize %>
+        <% end %>
+      </h1>
+      <p>Real-time operational health across inventory, warehouses, and job work.</p>
+    </div>
+    <% if @alerts_count.to_i.positive? %>
+      <div class="dash-alert-chip">
+        <span class="pill warn"><%= @alerts_count %> low stock</span>
+      </div>
+    <% end %>
+  </header>
+
+  <section class="kpi-grid" aria-label="Key metrics">
+    <article class="kpi-card kpi-card--featured">
       <div class="kpi-label">Total Inventory Value</div>
       <div class="kpi-value"><%= number_to_currency(@inventory_value || 0, unit: "₹", precision: 0) %></div>
-    </div>
-    <div class="kpi-card">
+      <div class="kpi-foot">Excludes trading products</div>
+    </article>
+    <article class="kpi-card">
       <div class="kpi-label">Active Master Items</div>
-      <div class="kpi-value"><%= @active_items_count || 0 %></div>
-    </div>
-    <div class="kpi-card">
+      <div class="kpi-value"><%= number_with_delimiter(@active_items_count || 0) %></div>
+    </article>
+    <article class="kpi-card<%= ' kpi-card--warn' if @alerts_count.to_i.positive? %>">
       <div class="kpi-label">Low Stock Alerts</div>
-      <div class="kpi-value" style="color: var(--rose);"><%= @alerts_count || 0 %></div>
-    </div>
-  </div>
+      <div class="kpi-value kpi-value--warn"><%= @alerts_count || 0 %></div>
+    </article>
+    <article class="kpi-card<%= ' kpi-card--warn' if @pending_challans.to_i.positive? %>">
+      <div class="kpi-label">Pending Job Work</div>
+      <div class="kpi-value<%= ' kpi-value--warn' if @pending_challans.to_i.positive? %>"><%= @pending_challans || 0 %></div>
+    </article>
+  </section>
 
-  <!-- Recent Activity Table -->
-  <div class="card" style="margin-top: 20px;">
-    <div class="card-head">
-      <h3>Recent Inventory Activity</h3>
-      <div class="card-sub">Latest stock movements across all warehouses</div>
-    </div>
-    <div class="table-wrap">
-      <table class="data-table">
-        <thead>
-          <tr>
-            <th>Batch / Ref</th>
-            <th>Item</th>
-            <th>Warehouse</th>
-            <th class="num">Quantity</th>
-            <th>Date</th>
-          </tr>
-        </thead>
-        <tbody>
-          <% if @recent_movements.present? %>
-            <% @recent_movements.each do |movement| %>
+  <div class="dash-grid">
+    <section class="dash-main">
+      <div class="card">
+        <div class="card-head">
+          <div>
+            <h3>Recent Inventory Activity</h3>
+            <div class="card-sub">Latest stock batches across all warehouses</div>
+          </div>
+          <span class="pill">Last <%= @recent_movements&.size || 0 %></span>
+        </div>
+        <div class="table-wrap">
+          <table class="data-table">
+            <thead>
               <tr>
-                <td class="strong mono"><%= movement.batch_number %></td>
-                <td><%= movement.item.try(:name) || 'Unknown Item' %></td>
-                <td><%= movement.warehouse.try(:name) || 'Unknown Location' %></td>
-                <td class="num"><%= number_with_delimiter(movement.quantity) %></td>
-                <td class="mono"><%= movement.created_at.strftime("%d %b %Y") %></td>
+                <th>Batch / Ref</th>
+                <th>Item</th>
+                <th>Warehouse</th>
+                <th class="num">Quantity</th>
+                <th>Date</th>
               </tr>
-            <% end %>
-          <% else %>
-            <tr>
-              <td colspan="5">
-                <div class="empty-state" style="padding: 30px; text-align: center; color: var(--muted);">
-                  <div class="es-title" style="font-weight: 600; color: var(--platinum-dim);">No recent movements found.</div>
-                  <div class="es-sub" style="font-size: 12px;">Seed the database to view live data.</div>
+            </thead>
+            <tbody>
+              <% if @recent_movements.present? %>
+                <% @recent_movements.each do |movement| %>
+                  <tr>
+                    <td class="strong mono"><%= movement.batch_number %></td>
+                    <td><%= movement.item.try(:name) || "Unknown Item" %></td>
+                    <td><%= movement.warehouse.try(:name) || "Unknown Location" %></td>
+                    <td class="num"><%= number_with_delimiter(movement.quantity) %></td>
+                    <td class="mono"><%= movement.created_at.strftime("%d %b %Y") %></td>
+                  </tr>
+                <% end %>
+              <% else %>
+                <tr>
+                  <td colspan="5">
+                    <div class="empty-state">
+                      <div class="es-title">No recent movements found.</div>
+                      <div class="es-sub">Run <code>bin/rails db:seed</code> to load demo data.</div>
+                    </div>
+                  </td>
+                </tr>
+              <% end %>
+            </tbody>
+          </table>
+        </div>
+      </div>
+    </section>
+
+    <aside class="dash-side">
+      <% if @warehouse_breakdown.present? %>
+        <div class="card">
+          <div class="card-head">
+            <div>
+              <h3>Inventory by Warehouse</h3>
+              <div class="card-sub">Valuation share by location</div>
+            </div>
+          </div>
+          <div class="card-body">
+            <div class="wh-bars">
+              <% @warehouse_breakdown.each do |name, value| %>
+                <% pct = @inventory_value.to_f.positive? ? (value / @inventory_value * 100).round(1) : 0 %>
+                <div class="wh-bar-row">
+                  <div class="wh-bar-meta">
+                    <span class="wh-bar-name"><%= name %></span>
+                    <span class="wh-bar-val"><%= number_to_currency(value, unit: "₹", precision: 0) %></span>
+                  </div>
+                  <div class="wh-bar-track" role="presentation">
+                    <div class="wh-bar-fill" style="width: <%= pct %>%;"></div>
+                  </div>
+                  <span class="wh-bar-pct"><%= pct %>%</span>
                 </div>
-              </td>
-            </tr>
-          <% end %>
-        </tbody>
-      </table>
-    </div>
+              <% end %>
+            </div>
+          </div>
+        </div>
+      <% end %>
+
+      <div class="card">
+        <div class="card-head">
+          <h3>Quick Navigation</h3>
+        </div>
+        <div class="card-body">
+          <nav class="quick-links" aria-label="Module shortcuts">
+            <%= link_to "Master Management", "/motor_admin/data/items", class: "quick-link" %>
+            <%= link_to "Inventory Batches", "/motor_admin/data/inventory_batches", class: "quick-link" %>
+            <%= link_to "Job Work Challans", "/motor_admin/data/job_work_challans", class: "quick-link" %>
+            <%= link_to "Quality Inspections", "/motor_admin/data/quality_inspections", class: "quick-link" %>
+          </nav>
+        </div>
+      </div>
+    </aside>
   </div>
 </div>
