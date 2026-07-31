@@ -17,10 +17,10 @@ Gem::Specification.new do |s|
   s.files = ["LICENSE.txt".freeze, "README.rdoc".freeze]
   s.homepage = "https://github.com/net-ssh/net-sftp".freeze
   s.licenses = ["MIT".freeze]
-  s.rubygems_version = "3.4.20".freeze
+  s.rubygems_version = "3.4.19".freeze
   s.summary = "A pure Ruby implementation of the SFTP client protocol.".freeze
 
-  s.installed_by_version = "3.4.20" if s.respond_to? :installed_by_version
+  s.installed_by_version = "3.4.19" if s.respond_to? :installed_by_version
 
   s.specification_version = 3
 

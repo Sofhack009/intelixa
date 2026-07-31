@@ -14,10 +14,10 @@ Gem::Specification.new do |s|
   s.email = ["donal@37signals.com".freeze]
   s.homepage = "http://github.com/rails/solid_cache".freeze
   s.licenses = ["MIT".freeze]
-  s.rubygems_version = "3.4.20".freeze
+  s.rubygems_version = "3.4.19".freeze
   s.summary = "A database backed ActiveSupport::Cache::Store".freeze
 
-  s.installed_by_version = "3.4.20" if s.respond_to? :installed_by_version
+  s.installed_by_version = "3.4.19" if s.respond_to? :installed_by_version
 
   s.specification_version = 4
 

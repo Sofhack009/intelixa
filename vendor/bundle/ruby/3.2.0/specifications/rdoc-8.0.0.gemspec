@@ -20,10 +20,10 @@ Gem::Specification.new do |s|
   s.licenses = ["Ruby".freeze, "GPL-2.0-only".freeze]
   s.rdoc_options = ["--main".freeze, "README.md".freeze, "--copy-files".freeze, "rdoc-logo.svg".freeze]
   s.required_ruby_version = Gem::Requirement.new(">= 3.2.0".freeze)
-  s.rubygems_version = "3.4.20".freeze
+  s.rubygems_version = "3.4.19".freeze
   s.summary = "RDoc produces HTML and command-line documentation for Ruby projects".freeze
 
-  s.installed_by_version = "3.4.20" if s.respond_to? :installed_by_version
+  s.installed_by_version = "3.4.19" if s.respond_to? :installed_by_version
 
   s.specification_version = 4
 

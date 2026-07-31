@@ -1,5 +1,5 @@
 <% content_for :page_title, "Operations Dashboard" %>
-<% content_for :page_crumb, "Parshavanath Exim · #{Time.current.strftime('%d %b %Y')}" %>
+<% content_for :page_crumb, "Intelixa · #{Time.current.strftime('%d %b %Y')}" %>
 
 <div class="view-wrap dash">
   <header class="dash-hero">
@@ -40,52 +40,123 @@
 
   <div class="dash-grid">
     <section class="dash-main">
-      <div class="card">
-        <div class="card-head">
-          <div>
-            <h3>Recent Inventory Activity</h3>
-            <div class="card-sub">Latest stock batches across all warehouses</div>
-          </div>
-          <span class="pill">Last <%= @recent_movements&.size || 0 %></span>
+      
+      <!-- ⚠️ Needs Attention List -->
+      <div class="card border-rose">
+        <div class="card-head bg-rose-dim">
+          <h3 class="text-rose">⚠️ NEEDS ATTENTION (<%= @needs_attention.size %>)</h3>
         </div>
-        <div class="table-wrap">
-          <table class="data-table">
-            <thead>
-              <tr>
-                <th>Batch / Ref</th>
-                <th>Item</th>
-                <th>Warehouse</th>
-                <th class="num">Quantity</th>
-                <th>Date</th>
-              </tr>
-            </thead>
-            <tbody>
-              <% if @recent_movements.present? %>
-                <% @recent_movements.each do |movement| %>
-                  <tr>
-                    <td class="strong mono"><%= movement.batch_number %></td>
-                    <td><%= movement.item.try(:name) || "Unknown Item" %></td>
-                    <td><%= movement.warehouse.try(:name) || "Unknown Location" %></td>
-                    <td class="num"><%= number_with_delimiter(movement.quantity) %></td>
-                    <td class="mono"><%= movement.created_at.strftime("%d %b %Y") %></td>
-                  </tr>
-                <% end %>
-              <% else %>
-                <tr>
-                  <td colspan="5">
-                    <div class="empty-state">
-                      <div class="es-title">No recent movements found.</div>
-                      <div class="es-sub">Run <code>bin/rails db:seed</code> to load demo data.</div>
+        <div class="list-group">
+          <% if @needs_attention.any? %>
+            <% @needs_attention.each do |challan| %>
+              <div class="list-item">
+                <span class="text-rose font-bold">Overdue</span> &mdash; <%= challan.job_worker.process_type.upcase %> &middot; CH-<%= challan.id.to_s.rjust(4, '0') %>
+                <a href="/motor_admin/data/job_work_challans/<%= challan.id %>" class="link-gold ml-auto">View</a>
+              </div>
+            <% end %>
+          <% else %>
+            <div class="list-item text-muted">All clear! No items need immediate attention.</div>
+          <% end %>
+        </div>
+      </div>
+
+      <!-- 📊 My Work Kanban -->
+      <div class="card mt-4">
+        <div class="card-head">
+          <h3>My Work</h3>
+          <div class="card-sub">Due today &middot; overdue &middot; in progress &middot; coming up</div>
+        </div>
+        <div class="card-body">
+          
+          <!-- Dynamic Status Pills -->
+          <div class="status-pills">
+            <span class="pill outline"><%= @kanban_today.size %> today</span>
+            <span class="pill outline <%= 'warn' if @kanban_overdue.any? %>"><%= @kanban_overdue.size %> overdue</span>
+            <span class="pill outline info"><%= @kanban_working.size %> active</span>
+            <span class="pill outline"><%= @kanban_upcoming.size %> upcoming</span>
+          </div>
+
+          <!-- Kanban Grid -->
+          <div class="kanban-board-wrapper mt-4">
+            <div class="kanban-grid">
+              
+              <!-- Today Column -->
+              <div class="kanban-col">
+                <div class="kanban-header"><span>📅</span> Today</div>
+                <div class="kanban-body <%= 'empty' if @kanban_today.empty? %>">
+                  <% if @kanban_today.empty? %>No tasks due today<% end %>
+                  <% @kanban_today.each do |challan| %>
+                    <div class="kanban-card">
+                      <div class="flex-between">
+                        <strong><%= challan.job_worker.process_type %></strong>
+                        <span class="text-xs font-bold text-gold">Today</span>
+                      </div>
+                      <div class="text-muted text-xs mt-1">CH-<%= challan.id.to_s.rjust(4, '0') %> &middot; <%= challan.job_worker.name.truncate(18) %></div>
                     </div>
-                  </td>
-                </tr>
-              <% end %>
-            </tbody>
-          </table>
+                  <% end %>
+                </div>
+              </div>
+              
+              <!-- Overdue Column -->
+              <div class="kanban-col">
+                <div class="kanban-header"><span>🕒</span> Overdue</div>
+                <div class="kanban-body <%= 'empty' if @kanban_overdue.empty? %>">
+                  <% if @kanban_overdue.empty? %>All caught up!<% end %>
+                  <% @kanban_overdue.each do |challan| %>
+                    <% days_overdue = (Time.current.to_date - challan.expected_return_date.to_date).to_i %>
+                    <div class="kanban-card border-rose">
+                      <div class="flex-between">
+                        <strong><%= challan.job_worker.process_type %></strong>
+                        <span class="text-rose text-xs font-bold"><%= days_overdue %>d overdue</span>
+                      </div>
+                      <div class="text-muted text-xs mt-1">CH-<%= challan.id.to_s.rjust(4, '0') %> &middot; <%= challan.job_worker.name.truncate(18) %></div>
+                      <div class="mt-2"><span class="pill warn min">High Priority</span></div>
+                    </div>
+                  <% end %>
+                </div>
+              </div>
+
+              <!-- Working (Active/Pending) Column -->
+              <div class="kanban-col">
+                <div class="kanban-header"><span>🔄</span> Working</div>
+                <div class="kanban-body <%= 'empty' if @kanban_working.empty? %>">
+                  <% if @kanban_working.empty? %>No active tasks<% end %>
+                  <% @kanban_working.each do |challan| %>
+                    <div class="kanban-card">
+                      <div class="flex-between">
+                        <strong><%= challan.job_worker.process_type %></strong>
+                        <span class="text-xs text-muted">In Progress</span>
+                      </div>
+                      <div class="text-muted text-xs mt-1">CH-<%= challan.id.to_s.rjust(4, '0') %> &middot; <%= challan.job_worker.name.truncate(18) %></div>
+                    </div>
+                  <% end %>
+                </div>
+              </div>
+
+              <!-- Upcoming Column -->
+              <div class="kanban-col">
+                <div class="kanban-header"><span>⏳</span> Upcoming</div>
+                <div class="kanban-body <%= 'empty' if @kanban_upcoming.empty? %>">
+                  <% if @kanban_upcoming.empty? %>No upcoming tasks<% end %>
+                  <% @kanban_upcoming.each do |challan| %>
+                    <div class="kanban-card">
+                      <div class="flex-between">
+                        <strong><%= challan.job_worker.process_type %></strong>
+                        <span class="text-xs"><%= challan.expected_return_date.strftime("%b %d") %></span>
+                      </div>
+                      <div class="text-muted text-xs mt-1">CH-<%= challan.id.to_s.rjust(4, '0') %> &middot; <%= challan.job_worker.name.truncate(18) %></div>
+                    </div>
+                  <% end %>
+                </div>
+              </div>
+              
+            </div>
+          </div>
+
         </div>
       </div>
     </section>
-
+    
     <aside class="dash-side">
       <% if @warehouse_breakdown.present? %>
         <div class="card">

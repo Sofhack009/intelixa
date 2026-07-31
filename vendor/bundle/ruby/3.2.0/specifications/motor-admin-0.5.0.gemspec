@@ -15,10 +15,10 @@ Gem::Specification.new do |s|
   s.licenses = ["MIT".freeze]
   s.post_install_message = "\n    ==================\n    Run `rails g motor:install && rake db:migrate`\n    to configure and start using Motor Admin\n\n    Run `rails g motor:upgrade && rake db:migrate`\n    to perform data migration and enable the latest features\n    ==================\n  ".freeze
   s.required_ruby_version = Gem::Requirement.new(">= 2.6".freeze)
-  s.rubygems_version = "3.4.20".freeze
+  s.rubygems_version = "3.4.19".freeze
   s.summary = "Low-code Admin panel and Business intelligence".freeze
 
-  s.installed_by_version = "3.4.20" if s.respond_to? :installed_by_version
+  s.installed_by_version = "3.4.19" if s.respond_to? :installed_by_version
 
   s.specification_version = 4
 

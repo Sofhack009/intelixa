@@ -20,10 +20,10 @@ Gem::Specification.new do |s|
   s.homepage = "https://github.com/ruby/rbs".freeze
   s.licenses = ["BSD-2-Clause".freeze, "Ruby".freeze]
   s.required_ruby_version = Gem::Requirement.new(">= 3.2".freeze)
-  s.rubygems_version = "3.4.20".freeze
+  s.rubygems_version = "3.4.19".freeze
   s.summary = "Type signature for Ruby.".freeze
 
-  s.installed_by_version = "3.4.20" if s.respond_to? :installed_by_version
+  s.installed_by_version = "3.4.19" if s.respond_to? :installed_by_version
 
   s.specification_version = 4
 

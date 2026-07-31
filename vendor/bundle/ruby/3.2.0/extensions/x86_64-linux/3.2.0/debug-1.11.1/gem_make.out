@@ -1,0 +1,19 @@
+current directory: /home/lokesh/WORK/intelixa/vendor/bundle/ruby/3.2.0/gems/debug-1.11.1/ext/debug
+/home/lokesh/.rbenv/versions/3.2.3/bin/ruby extconf.rb
+creating Makefile
+
+current directory: /home/lokesh/WORK/intelixa/vendor/bundle/ruby/3.2.0/gems/debug-1.11.1/ext/debug
+make DESTDIR\= sitearchdir\=./.gem.20260731-51635-br2g2z sitelibdir\=./.gem.20260731-51635-br2g2z clean
+
+current directory: /home/lokesh/WORK/intelixa/vendor/bundle/ruby/3.2.0/gems/debug-1.11.1/ext/debug
+make DESTDIR\= sitearchdir\=./.gem.20260731-51635-br2g2z sitelibdir\=./.gem.20260731-51635-br2g2z
+compiling debug.c
+compiling iseq_collector.c
+linking shared-object debug/debug.so
+
+current directory: /home/lokesh/WORK/intelixa/vendor/bundle/ruby/3.2.0/gems/debug-1.11.1/ext/debug
+make DESTDIR\= sitearchdir\=./.gem.20260731-51635-br2g2z sitelibdir\=./.gem.20260731-51635-br2g2z install
+/usr/bin/install -c -m 0755 debug.so ./.gem.20260731-51635-br2g2z/debug
+
+current directory: /home/lokesh/WORK/intelixa/vendor/bundle/ruby/3.2.0/gems/debug-1.11.1/ext/debug
+make DESTDIR\= sitearchdir\=./.gem.20260731-51635-br2g2z sitelibdir\=./.gem.20260731-51635-br2g2z clean
