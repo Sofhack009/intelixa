@@ -42,7 +42,10 @@ module Inventory
         end
 
         new_quantity = batch.quantity + @quantity_delta
-        raise ActiveRecord::RecordInvalid, "Insufficient stock" if new_quantity.negative?
+        if new_quantity.negative?
+          batch.errors.add(:quantity, "is insufficient for this adjustment")
+          raise ActiveRecord::RecordInvalid.new(batch)
+        end
 
         batch.update!(quantity: new_quantity, unit_cost: @unit_cost)
 
