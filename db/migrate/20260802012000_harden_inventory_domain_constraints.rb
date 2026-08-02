@@ -1,7 +1,6 @@
 class HardenInventoryDomainConstraints < ActiveRecord::Migration[8.0]
   def change
     add_index :warehouses, :name, unique: true, if_not_exists: true
-    add_index :job_workers, [:name, :process_type], unique: true, if_not_exists: true
 
     add_check_constraint :job_work_items,
                          "quantity_issued > 0",
