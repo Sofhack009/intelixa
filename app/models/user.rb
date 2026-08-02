@@ -1,10 +1,12 @@
 class User < ApplicationRecord
-  # Include default devise modules. Others available are:
-  # :confirmable, :lockable, :timeoutable, :trackable and :omniauthable
   devise :database_authenticatable, :registerable,
          :recoverable, :rememberable, :validatable
 
   ROLES = %w[operator admin].freeze
+
+  has_many :stock_movements, foreign_key: :created_by_id, dependent: :restrict_with_error
+  has_many :wastage_logs, foreign_key: :created_by_id, dependent: :restrict_with_error
+  has_many :quality_inspections, foreign_key: :inspected_by, dependent: :restrict_with_error
 
   validates :role, presence: true, inclusion: { in: ROLES }
 

@@ -2,6 +2,7 @@ class Item < ApplicationRecord
   has_many :stocked_inventory_batches, -> { in_stock }, class_name: "InventoryBatch"
 
   has_many :inventory_batches, dependent: :restrict_with_error
+  has_many :stock_movements, dependent: :restrict_with_error
   has_many :job_work_items, dependent: :restrict_with_error
   has_many :wastage_logs, dependent: :restrict_with_error
   has_many :quality_inspections, dependent: :restrict_with_error

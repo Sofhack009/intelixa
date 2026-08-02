@@ -1,10 +1,9 @@
 Rails.application.routes.draw do
   devise_for :users
 
-  # Secure the Motor Admin engine.
+  # Secure the Motor Admin engine. The engine owns its nested /data routes.
   authenticate :user, ->(user) { user.admin? } do
     mount Motor::Admin => "/motor_admin"
-    get "/motor_admin(/*path)", to: redirect("/motor_admin")
   end
 
   # The custom dashboard is the signed-in landing page.
