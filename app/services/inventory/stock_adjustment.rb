@@ -47,7 +47,8 @@ module Inventory
           raise ActiveRecord::RecordInvalid.new(batch)
         end
 
-        batch.update!(quantity: new_quantity, unit_cost: @unit_cost)
+        new_unit_cost = @quantity_delta.positive? ? @unit_cost : batch.unit_cost
+        batch.update!(quantity: new_quantity, unit_cost: new_unit_cost)
 
         movement = StockMovement.create!(
           item: @item,
