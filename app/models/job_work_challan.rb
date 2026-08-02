@@ -4,4 +4,8 @@ class JobWorkChallan < ApplicationRecord
 
   validates :expected_return_date, presence: true
   validates :status, presence: true
+
+  scope :active, -> { where.not(status: "Completed") }
+  scope :overdue, ->(date = Time.zone.today) { where("expected_return_date < ?", date.beginning_of_day) }
+  scope :due_on, ->(date) { where(expected_return_date: date.all_day) }
 end

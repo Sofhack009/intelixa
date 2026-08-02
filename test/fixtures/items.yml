@@ -1,7 +1,7 @@
 # Read about fixtures at https://api.rubyonrails.org/classes/ActiveRecord/FixtureSet.html
 
 one:
-  sku_code: MyString
+  sku_code: ITEM-001
   name: MyString
   category: MyString
   item_type: MyString
@@ -9,7 +9,7 @@ one:
   min_stock_level: 1
 
 two:
-  sku_code: MyString
+  sku_code: ITEM-002
   name: MyString
   category: MyString
   item_type: MyString

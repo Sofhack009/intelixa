@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema[8.0].define(version: 2026_07_20_115818) do
+ActiveRecord::Schema[8.0].define(version: 2026_08_02_000000) do
   # These are extensions that must be enabled in order to support this database
   enable_extension "pg_catalog.plpgsql"
 
@@ -23,8 +23,11 @@ ActiveRecord::Schema[8.0].define(version: 2026_07_20_115818) do
     t.date "expiry_date"
     t.datetime "created_at", null: false
     t.datetime "updated_at", null: false
+    t.index ["item_id", "warehouse_id", "batch_number"], name: "index_inventory_batches_unique_batch_per_location", unique: true
     t.index ["item_id"], name: "index_inventory_batches_on_item_id"
     t.index ["warehouse_id"], name: "index_inventory_batches_on_warehouse_id"
+    t.check_constraint "quantity >= 0", name: "inventory_batches_quantity_non_negative"
+    t.check_constraint "unit_cost >= 0::numeric", name: "inventory_batches_unit_cost_non_negative"
   end
 
   create_table "items", force: :cascade do |t|
@@ -36,7 +39,10 @@ ActiveRecord::Schema[8.0].define(version: 2026_07_20_115818) do
     t.integer "min_stock_level", default: 10
     t.datetime "created_at", null: false
     t.datetime "updated_at", null: false
+    t.index ["item_type"], name: "index_items_on_item_type"
+    t.index ["min_stock_level"], name: "index_items_on_min_stock_level"
     t.index ["sku_code"], name: "index_items_on_sku_code", unique: true
+    t.check_constraint "min_stock_level >= 0", name: "items_min_stock_level_non_negative"
   end
 
   create_table "job_work_challans", force: :cascade do |t|
@@ -47,6 +53,7 @@ ActiveRecord::Schema[8.0].define(version: 2026_07_20_115818) do
     t.datetime "created_at", null: false
     t.datetime "updated_at", null: false
     t.index ["job_worker_id"], name: "index_job_work_challans_on_job_worker_id"
+    t.index ["status", "expected_return_date"], name: "index_job_work_challans_on_status_and_expected_return_date"
   end
 
   create_table "job_work_items", force: :cascade do |t|
@@ -285,8 +292,10 @@ ActiveRecord::Schema[8.0].define(version: 2026_07_20_115818) do
     t.datetime "remember_created_at"
     t.datetime "created_at", null: false
     t.datetime "updated_at", null: false
+    t.string "role", default: "operator", null: false
     t.index ["email"], name: "index_users_on_email", unique: true
     t.index ["reset_password_token"], name: "index_users_on_reset_password_token", unique: true
+    t.index ["role"], name: "index_users_on_role"
   end
 
   create_table "warehouses", force: :cascade do |t|

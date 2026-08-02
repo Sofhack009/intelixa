@@ -2,7 +2,7 @@ Rails.application.routes.draw do
   devise_for :users
 
   # Secure the Motor Admin engine.
-  authenticate :user do
+  authenticate :user, ->(user) { user.admin? } do
     mount Motor::Admin => "/motor_admin"
     get "/motor_admin(/*path)", to: redirect("/motor_admin")
   end
