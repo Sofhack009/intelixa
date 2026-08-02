@@ -19,7 +19,7 @@ module Dashboard
     def warehouse_breakdown
       InventoryBatch.valued_for_dashboard
         .joins(:warehouse)
-        .group("warehouses.id", "warehouses.name")
+        .group("warehouses.name")
         .sum("inventory_batches.quantity * inventory_batches.unit_cost")
     end
 
