@@ -50,8 +50,8 @@
           <% if @needs_attention.any? %>
             <% @needs_attention.each do |challan| %>
               <div class="list-item">
-                <span class="text-rose font-bold">Overdue</span> &mdash; <%= challan.job_worker.process_type.upcase %> &middot; CH-<%= challan.id.to_s.rjust(4, '0') %>
-                <a href="/motor_admin/data/job_work_challans/<%= challan.id %>" class="link-gold ml-auto">View</a>
+                <span class="text-rose font-bold">Overdue</span> &mdash; <%= job_worker_process(challan).upcase %> &middot; <%= challan_reference(challan) %>
+                <%= link_to "View", motor_admin_record_path("job_work_challans", challan.id), class: "link-gold ml-auto" %>
               </div>
             <% end %>
           <% else %>
@@ -88,10 +88,10 @@
                   <% @kanban_today.each do |challan| %>
                     <div class="kanban-card">
                       <div class="flex-between">
-                        <strong><%= challan.job_worker.process_type %></strong>
+                        <strong><%= job_worker_process(challan) %></strong>
                         <span class="text-xs font-bold text-gold">Today</span>
                       </div>
-                      <div class="text-muted text-xs mt-1">CH-<%= challan.id.to_s.rjust(4, '0') %> &middot; <%= challan.job_worker.name.truncate(18) %></div>
+                      <div class="text-muted text-xs mt-1"><%= challan_reference(challan) %> &middot; <%= truncate(job_worker_name(challan), length: 18) %></div>
                     </div>
                   <% end %>
                 </div>
@@ -106,10 +106,10 @@
                     <% days_overdue = (Time.current.to_date - challan.expected_return_date.to_date).to_i %>
                     <div class="kanban-card border-rose">
                       <div class="flex-between">
-                        <strong><%= challan.job_worker.process_type %></strong>
+                        <strong><%= job_worker_process(challan) %></strong>
                         <span class="text-rose text-xs font-bold"><%= days_overdue %>d overdue</span>
                       </div>
-                      <div class="text-muted text-xs mt-1">CH-<%= challan.id.to_s.rjust(4, '0') %> &middot; <%= challan.job_worker.name.truncate(18) %></div>
+                      <div class="text-muted text-xs mt-1"><%= challan_reference(challan) %> &middot; <%= truncate(job_worker_name(challan), length: 18) %></div>
                       <div class="mt-2"><span class="pill warn min">High Priority</span></div>
                     </div>
                   <% end %>
@@ -124,10 +124,10 @@
                   <% @kanban_working.each do |challan| %>
                     <div class="kanban-card">
                       <div class="flex-between">
-                        <strong><%= challan.job_worker.process_type %></strong>
+                        <strong><%= job_worker_process(challan) %></strong>
                         <span class="text-xs text-muted">In Progress</span>
                       </div>
-                      <div class="text-muted text-xs mt-1">CH-<%= challan.id.to_s.rjust(4, '0') %> &middot; <%= challan.job_worker.name.truncate(18) %></div>
+                      <div class="text-muted text-xs mt-1"><%= challan_reference(challan) %> &middot; <%= truncate(job_worker_name(challan), length: 18) %></div>
                     </div>
                   <% end %>
                 </div>
@@ -141,10 +141,10 @@
                   <% @kanban_upcoming.each do |challan| %>
                     <div class="kanban-card">
                       <div class="flex-between">
-                        <strong><%= challan.job_worker.process_type %></strong>
+                        <strong><%= job_worker_process(challan) %></strong>
                         <span class="text-xs"><%= challan.expected_return_date.strftime("%b %d") %></span>
                       </div>
-                      <div class="text-muted text-xs mt-1">CH-<%= challan.id.to_s.rjust(4, '0') %> &middot; <%= challan.job_worker.name.truncate(18) %></div>
+                      <div class="text-muted text-xs mt-1"><%= challan_reference(challan) %> &middot; <%= truncate(job_worker_name(challan), length: 18) %></div>
                     </div>
                   <% end %>
                 </div>
@@ -176,7 +176,7 @@
                     <span class="wh-bar-val"><%= number_to_currency(value, unit: "₹", precision: 0) %></span>
                   </div>
                   <div class="wh-bar-track" role="presentation">
-                    <div class="wh-bar-fill" style="width: <%= pct %>%;"></div>
+                    <div class="wh-bar-fill" style="width: <%= [pct, 100].min %>%;"></div>
                   </div>
                   <span class="wh-bar-pct"><%= pct %>%</span>
                 </div>
@@ -192,10 +192,10 @@
         </div>
         <div class="card-body">
           <nav class="quick-links" aria-label="Module shortcuts">
-            <%= link_to "Master Management", "/motor_admin/data/items", class: "quick-link" %>
-            <%= link_to "Inventory Batches", "/motor_admin/data/inventory_batches", class: "quick-link" %>
-            <%= link_to "Job Work Challans", "/motor_admin/data/job_work_challans", class: "quick-link" %>
-            <%= link_to "Quality Inspections", "/motor_admin/data/quality_inspections", class: "quick-link" %>
+            <%= link_to "Master Management", motor_admin_record_path("items"), class: "quick-link" %>
+            <%= link_to "Inventory Batches", motor_admin_record_path("inventory_batches"), class: "quick-link" %>
+            <%= link_to "Job Work Challans", motor_admin_record_path("job_work_challans"), class: "quick-link" %>
+            <%= link_to "Quality Inspections", motor_admin_record_path("quality_inspections"), class: "quick-link" %>
           </nav>
         </div>
       </div>
