@@ -1,24 +1,36 @@
-# README
+# Intelixa
 
-This README would normally document whatever steps are necessary to get the
-application up and running.
+Intelixa is a Rails operations dashboard for inventory, warehouses, job work challans, quality inspections, and wastage tracking. The signed-in dashboard summarizes operational health while Motor Admin provides administrative CRUD screens for trusted administrators.
 
-Things you may want to cover:
+## Requirements
 
-* Ruby version
+- Ruby 3.4.x
+- Rails 8.0.x
+- PostgreSQL
+- Bundler
 
-* System dependencies
+## Setup
 
-* Configuration
+```bash
+bundle install
+bin/rails db:prepare
+```
 
-* Database creation
+Create an administrator by setting a user's `role` to `admin`; ordinary signed-in users remain `operator` users and cannot access Motor Admin.
 
-* Database initialization
+## Development
 
-* How to run the test suite
+```bash
+bin/dev
+```
 
-* Services (job queues, cache servers, search engines, etc.)
+Visit `/dashboard` for the operations dashboard. Admin users can visit `/motor_admin` for back-office resource management.
 
-* Deployment instructions
+## Testing and security checks
 
-* ...
+```bash
+bin/rails test
+bin/brakeman --no-pager
+```
+
+The GitHub Actions workflow runs database preparation, Rails tests, and Brakeman on pushes and pull requests.
