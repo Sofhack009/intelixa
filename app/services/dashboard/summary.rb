@@ -41,7 +41,7 @@ module Dashboard
 
     def kanban_upcoming
       JobWorkChallan.active
-        .where(expected_return_date: (Time.zone.tomorrow + 1.day).all_day..(Time.zone.today + 30.days).end_of_day)
+        .where(expected_return_date: Time.zone.tomorrow.beginning_of_day..30.days.from_now.end_of_day)
         .order(expected_return_date: :asc)
     end
 
