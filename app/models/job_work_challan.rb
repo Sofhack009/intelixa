@@ -1,5 +1,5 @@
 class JobWorkChallan < ApplicationRecord
-  STATUSES = %w[Pending In\ Progress Completed Cancelled].freeze
+  STATUSES = %w[Pending In\ Progress Completed Cancelled Overdue].freeze
 
   belongs_to :job_worker
   has_many :job_work_items, dependent: :restrict_with_error
